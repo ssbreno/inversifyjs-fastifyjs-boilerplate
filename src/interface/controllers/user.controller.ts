@@ -48,15 +48,11 @@ export class UserController extends Controller {
   public async createUser(
     @Body() requestBody: userDto.CreateUserDto
   ): Promise<userDto.UserResponseDto> {
-    try {
-      if (!requestBody || !requestBody.email) {
-        throw new Error('Request body must include a valid email');
-      }
-      const validatedData = userDto.CreateUserSchema.parse(requestBody);
-      return this.createUserUseCase.execute(validatedData);
-    } catch (error) {
-      throw error;
+    if (!requestBody || !requestBody.email) {
+      throw new Error('Request body must include a valid email');
     }
+    const validatedData = userDto.CreateUserSchema.parse(requestBody);
+    return this.createUserUseCase.execute(validatedData);
   }
 
   /**

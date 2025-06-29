@@ -4,14 +4,10 @@
   "parserOptions": {
     "ecmaVersion": 2024,
     "sourceType": "module",
-    "project": "./tsconfig.json"
+    "project": ["./tsconfig.json", "./tsconfig.test.json"]
   },
   "plugins": ["@typescript-eslint", "prettier"],
-  "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "prettier"
-  ],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
     "prettier/prettier": "error",
     "@typescript-eslint/explicit-function-return-type": "off",
