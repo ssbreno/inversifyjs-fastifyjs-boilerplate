@@ -1,0 +1,64 @@
+name: Test
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      # Setup PostgreSQL service for tests that require a database
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        # Health check to wait for postgres to start
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Generate Prisma client
+        run: npm run prisma:generate
+      
+      # Create .env file from example for testing
+      - name: Setup environment
+        run: cp .env.example .env
+      
+      # Generate Swagger and TSOA routes
+      - name: Generate Swagger
+        run: npm run swagger:generate
+        
+      - name: Run tests
+        run: npm run test:coverage
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+          
+      # Optional: Upload coverage reports
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        # This step won't fail the workflow if Codecov isn't configured
+        continue-on-error: true

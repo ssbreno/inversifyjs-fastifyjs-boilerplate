@@ -1,38 +1,46 @@
 FROM node:22-alpine AS builder
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl libc6-compat
+# Install OpenSSL for Prisma and yarn
+RUN apk add --no-cache openssl libc6-compat yarn
 
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
+COPY package.json yarn.lock* ./
 
-RUN npm ci
+# Install dependencies
+RUN yarn install --frozen-lockfile
 
 COPY prisma ./prisma/
 
-RUN npx prisma generate
+RUN yarn prisma generate
 
 COPY . .
 
-RUN npm run build
+# Generate Swagger documentation
+RUN yarn swagger:generate
+
+RUN yarn build
 
 FROM node:22-alpine AS production
 
-# Install OpenSSL for Prisma
-RUN apk add --no-cache openssl libc6-compat
+# Install OpenSSL for Prisma and yarn
+RUN apk add --no-cache openssl libc6-compat yarn
 
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY package.json package-lock.json* ./
+COPY package.json yarn.lock* ./
 
-RUN npm ci --omit=dev
+# Install production dependencies only
+RUN yarn install --frozen-lockfile --production
 
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 
 COPY --from=builder /app/dist ./dist
+
+# Copy the generated Swagger documentation
+COPY --from=builder /app/src/generated ./src/generated
 
 COPY prisma ./prisma/
 
