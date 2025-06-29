@@ -1,0 +1,28 @@
+{
+  "entryFile": "src/index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/interface/controllers/**/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "src/generated",
+    "specVersion": 3,
+    "basePath": "/api",
+    "outputFormat": "openapi",
+    "specFileBaseName": "openapi",
+    "tags": [
+      {
+        "name": "User",
+        "description": "Operations about users"
+      }
+    ]
+  },
+  "routes": {
+    "routesDir": "src/generated",
+    "iocModule": "src/infrastructure/config/inversify.config",
+    "middleware": "express",
+    "authenticationModule": "src/shared/auth/authentication",
+    "esm": true
+  },
+  "compilerOptions": {
+    "strictNullChecks": true
+  }
+}
