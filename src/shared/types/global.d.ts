@@ -1,12 +1,22 @@
 declare module 'dotenv' {
-  export function config(options?: { path?: string; encoding?: string; debug?: boolean; override?: boolean }): void;
+  export function config(options?: {
+    path?: string;
+    encoding?: string;
+    debug?: boolean;
+    override?: boolean;
+  }): void;
   export function parse(src: string | Buffer): Record<string, string>;
 }
 
 declare module '@fastify/cors' {
   import { FastifyPluginCallback } from 'fastify';
   const fastifyCors: FastifyPluginCallback<{
-    origin?: boolean | string | RegExp | (string | RegExp)[] | ((origin: string, cb: (err: Error | null, allow: boolean) => void) => void);
+    origin?:
+      | boolean
+      | string
+      | RegExp
+      | (string | RegExp)[]
+      | ((origin: string, cb: (err: Error | null, allow: boolean) => void) => void);
     methods?: string | string[];
     allowedHeaders?: string | string[];
     exposedHeaders?: string | string[];

@@ -5,13 +5,7 @@ export class User {
   private _createdAt: Date;
   private _updatedAt: Date;
 
-  constructor(
-    id: string,
-    email: string,
-    name?: string,
-    createdAt?: Date,
-    updatedAt?: Date
-  ) {
+  constructor(id: string, email: string, name?: string, createdAt?: Date, updatedAt?: Date) {
     this._id = id;
     this._email = email;
     this._name = name;

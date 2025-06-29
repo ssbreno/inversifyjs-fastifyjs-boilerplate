@@ -1,6 +1,24 @@
-version: '3.8'
-
 services:
+  app:
+    build:
+      context: .
+      target: builder
+    container_name: app-service
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "3000:3000"
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/app_db?schema=public
+    depends_on:
+      - postgres
+    networks:
+      - app-network
+
   postgres:
     image: postgres:16-alpine
     container_name: app-postgres

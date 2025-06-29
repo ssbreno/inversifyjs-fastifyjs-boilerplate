@@ -1,26 +1,18 @@
 import { injectable, inject } from 'inversify';
-import { User } from '../../domain/entities/user.entity.js';
-import { UserRepository } from '../../domain/repositories/user.repository.js';
-import { PrismaService } from '../database/prisma.service.js';
-import { TYPES } from '../../shared/types/types.js';
+import { User } from '../../../domain/entities/user.entity.js';
+import { UserRepository } from '../../../domain/repositories/user.repository.js';
+import { PrismaService } from '../prisma.service.js';
+import { TYPES } from '../../../shared/types/types.js';
 
 @injectable()
 export class UserRepositoryImpl implements UserRepository {
-  constructor(
-    @inject(TYPES.PrismaService) private prismaService: PrismaService
-  ) {}
+  constructor(@inject(TYPES.PrismaService) private prismaService: PrismaService) {}
 
   async findAll(): Promise<User[]> {
     const users = await this.prismaService.user.findMany();
     return users.map(
       (user) =>
-        new User(
-          user.id,
-          user.email,
-          user.name || undefined,
-          user.createdAt,
-          user.updatedAt
-        )
+        new User(user.id, user.email, user.name || undefined, user.createdAt, user.updatedAt)
     );
   }
 
@@ -31,13 +23,7 @@ export class UserRepositoryImpl implements UserRepository {
 
     if (!user) return null;
 
-    return new User(
-      user.id,
-      user.email,
-      user.name || undefined,
-      user.createdAt,
-      user.updatedAt
-    );
+    return new User(user.id, user.email, user.name || undefined, user.createdAt, user.updatedAt);
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -47,13 +33,7 @@ export class UserRepositoryImpl implements UserRepository {
 
     if (!user) return null;
 
-    return new User(
-      user.id,
-      user.email,
-      user.name || undefined,
-      user.createdAt,
-      user.updatedAt
-    );
+    return new User(user.id, user.email, user.name || undefined, user.createdAt, user.updatedAt);
   }
 
   async create(user: User): Promise<User> {

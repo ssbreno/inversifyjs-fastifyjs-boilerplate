@@ -9,5 +9,5 @@ export const TYPES = {
   DeleteUserUseCase: Symbol.for('DeleteUserUseCase'),
   PrismaService: Symbol.for('PrismaService'),
   UserController: Symbol.for('UserController'),
-  LoggerService: Symbol.for('LoggerService'),
+  LoggerService: Symbol.for('LoggerService')
 };

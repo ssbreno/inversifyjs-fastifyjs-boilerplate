@@ -1,5 +1,16 @@
 import { inject, injectable } from 'inversify';
-import { Body, Controller, Get, Path, Post, Route, Tags, Response, SuccessResponse, Example } from '@tsoa/runtime';
+import {
+  Body,
+  Controller,
+  Get,
+  Path,
+  Post,
+  Route,
+  Tags,
+  Response,
+  SuccessResponse,
+  Example
+} from '@tsoa/runtime';
 import * as userDto from '../../application/dtos/user.dto.js';
 import { CreateUserUseCase } from '../../application/use-cases/user/create-user.use-case.js';
 import { GetUserByIdUseCase } from '../../application/use-cases/user/get-user-byid.use-case.js';
@@ -34,11 +45,18 @@ export class UserController extends Controller {
     createdAt: new Date(),
     updatedAt: new Date()
   })
-  public async createUser(@Body() requestBody: userDto.CreateUserDto): Promise<userDto.UserResponseDto> {
-    // Validate data with Zod schema before processing
-    const validatedData = userDto.CreateUserSchema.parse(requestBody);
-    // We're using the same structure for both TSOA and Zod, so no mapping needed
-    return this.createUserUseCase.execute(validatedData);
+  public async createUser(
+    @Body() requestBody: userDto.CreateUserDto
+  ): Promise<userDto.UserResponseDto> {
+    try {
+      if (!requestBody || !requestBody.email) {
+        throw new Error('Request body must include a valid email');
+      }
+      const validatedData = userDto.CreateUserSchema.parse(requestBody);
+      return this.createUserUseCase.execute(validatedData);
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
@@ -60,22 +78,22 @@ export class UserController extends Controller {
     return this.getUserByIdUseCase.execute(userId);
   }
 
-    /**
+  /**
    * Get a user by ID (alternate endpoint)
    * @summary Retrieves a user by their unique identifier (alternate endpoint)
    * @param userId The unique identifier of the user
    * @returns The user data
    */
-    @Get('alternate/{userId}')
-    @Response('404', 'Not Found - User does not exist')
-    @Example<userDto.UserResponseDto>({
-      id: '123e4567-e89b-12d3-a456-426614174000',
-      email: 'user@example.com',
-      name: 'John Doe',
-      createdAt: new Date(),
-      updatedAt: new Date()
-    })
-    public async getUserById2(@Path() userId: string): Promise<userDto.UserResponseDto> {
-      return this.getUserByIdUseCase.execute(userId);
-    }
+  @Get('alternate/{userId}')
+  @Response('404', 'Not Found - User does not exist')
+  @Example<userDto.UserResponseDto>({
+    id: '123e4567-e89b-12d3-a456-426614174000',
+    email: 'user@example.com',
+    name: 'John Doe',
+    createdAt: new Date(),
+    updatedAt: new Date()
+  })
+  public async getUserById2(@Path() userId: string): Promise<userDto.UserResponseDto> {
+    return this.getUserByIdUseCase.execute(userId);
+  }
 }

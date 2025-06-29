@@ -28,12 +28,12 @@ describe('Fastify Logger Middleware', () => {
       headers: {},
       url: '/test',
       method: 'GET',
-      ip: '127.0.0.1',
+      ip: '127.0.0.1'
     };
 
     mockReply = {
       statusCode: 200,
-      header: jest.fn(),
+      header: jest.fn()
     };
 
     // Create done callback
@@ -41,7 +41,7 @@ describe('Fastify Logger Middleware', () => {
 
     // Create Fastify instance mock
     mockFastify = {
-      addHook: jest.fn(),
+      addHook: jest.fn()
     } as unknown as FastifyInstance;
   });
 
@@ -68,12 +68,15 @@ describe('Fastify Logger Middleware', () => {
     onRequestHook(mockRequest, mockReply, doneMock);
 
     // Verify that the logger was called
-    expect(mockLoggerService.info).toHaveBeenCalledWith('Incoming request', expect.objectContaining({
-      method: 'GET',
-      url: '/test',
-      ip: '127.0.0.1',
-      requestId: expect.any(String)
-    }));
+    expect(mockLoggerService.info).toHaveBeenCalledWith(
+      'Incoming request',
+      expect.objectContaining({
+        method: 'GET',
+        url: '/test',
+        ip: '127.0.0.1',
+        requestId: expect.any(String)
+      })
+    );
 
     // Verify that the done callback was called
     expect(doneMock).toHaveBeenCalled();

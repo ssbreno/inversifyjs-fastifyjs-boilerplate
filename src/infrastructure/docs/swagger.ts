@@ -8,10 +8,10 @@ const __dirname = path.dirname(__filename);
 
 export async function registerSwaggerDocs(fastify: FastifyInstance) {
   const openapiPath = path.resolve(__dirname, '../../../src/generated/openapi.json');
-  
+
   try {
     const swaggerSpec = JSON.parse(readFileSync(openapiPath, 'utf8'));
-    
+
     const swaggerHtml = `
       <!DOCTYPE html>
       <html lang="en">
@@ -43,7 +43,7 @@ export async function registerSwaggerDocs(fastify: FastifyInstance) {
       </body>
       </html>
     `;
-    
+
     fastify.get('/docs', (request, reply) => {
       reply.type('text/html').send(swaggerHtml);
     });
@@ -51,7 +51,7 @@ export async function registerSwaggerDocs(fastify: FastifyInstance) {
     fastify.get('/docs/swagger.json', (request, reply) => {
       reply.type('application/json').send(swaggerSpec);
     });
-    
+
     return true;
   } catch (error) {
     console.error('Error setting up Swagger documentation:', error);

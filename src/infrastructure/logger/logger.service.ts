@@ -17,15 +17,8 @@ export class LoggerService {
     this.logger = createLogger({
       level: getLogLevel(),
       defaultMeta: { service: loggerConfig.service },
-      format: format.combine(
-        format.timestamp(),
-        errors({ stack: true }),
-        format.json()
-      ),
-      transports: [
-        consoleTransport,
-        ...fileTransports
-      ],
+      format: format.combine(format.timestamp(), errors({ stack: true }), format.json()),
+      transports: [consoleTransport, ...fileTransports],
       exitOnError: false
     });
   }

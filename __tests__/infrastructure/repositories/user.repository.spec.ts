@@ -1,12 +1,12 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
-import { UserRepositoryImpl } from '../../../src/infrastructure/repositories/user.repository.js';
-import { PrismaService } from '../../../src/infrastructure/database/prisma.service.js';
+import { UserRepositoryImpl } from '../../../src/infrastructure/prisma/repositories/user.repository.js';
+import { PrismaService } from '../../../src/infrastructure/prisma/prisma.service.js';
 import { User } from '../../../src/domain/entities/user.entity.js';
 
 describe('UserRepositoryImpl', () => {
   let userRepository: UserRepositoryImpl;
   let mockPrismaService: jest.Mocked<PrismaService>;
-  
+
   const mockDate = new Date();
   const mockUserData = {
     id: 'test-id',
@@ -30,7 +30,7 @@ describe('UserRepositoryImpl', () => {
       $connect: jest.fn().mockResolvedValue(undefined),
       $disconnect: jest.fn().mockResolvedValue(undefined)
     } as unknown as jest.Mocked<PrismaService>;
-    
+
     userRepository = new UserRepositoryImpl(mockPrismaService);
   });
 
@@ -39,10 +39,10 @@ describe('UserRepositoryImpl', () => {
       // Arrange
       const mockPrismaUsers = [mockUserData];
       mockPrismaService.user.findMany.mockResolvedValueOnce(mockPrismaUsers);
-      
+
       // Act
       const result = await userRepository.findAll();
-      
+
       // Assert
       expect(mockPrismaService.user.findMany).toHaveBeenCalled();
       expect(result.length).toBe(1);
@@ -56,10 +56,10 @@ describe('UserRepositoryImpl', () => {
     it('should return a user when found', async () => {
       // Arrange
       mockPrismaService.user.findUnique.mockResolvedValueOnce(mockUserData);
-      
+
       // Act
       const result = await userRepository.findById('test-id');
-      
+
       // Assert
       expect(mockPrismaService.user.findUnique).toHaveBeenCalledWith({
         where: { id: 'test-id' }
@@ -71,10 +71,10 @@ describe('UserRepositoryImpl', () => {
     it('should return null when user not found', async () => {
       // Arrange
       mockPrismaService.user.findUnique.mockResolvedValueOnce(null);
-      
+
       // Act
       const result = await userRepository.findById('non-existent');
-      
+
       // Assert
       expect(result).toBeNull();
     });
@@ -90,12 +90,12 @@ describe('UserRepositoryImpl', () => {
         undefined,
         undefined
       );
-      
+
       mockPrismaService.user.create.mockResolvedValueOnce(mockUserData);
-      
+
       // Act
       const result = await userRepository.create(userToCreate);
-      
+
       // Assert
       expect(mockPrismaService.user.create).toHaveBeenCalledWith({
         data: {

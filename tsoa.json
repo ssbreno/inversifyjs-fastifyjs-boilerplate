@@ -1,7 +1,7 @@
 {
   "entryFile": "src/index.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
-  "controllerPathGlobs": ["src/interface/controllers/**/*Controller.ts"],
+  "controllerPathGlobs": ["src/interface/controllers/**/*.controller.ts"],
   "spec": {
     "outputDirectory": "src/generated",
     "specVersion": 3,
@@ -17,9 +17,9 @@
   },
   "routes": {
     "routesDir": "src/generated",
-    "iocModule": "src/infrastructure/config/inversify.config",
-    "middleware": "express",
-    "authenticationModule": "src/shared/auth/authentication",
+    "iocModule": "src/infrastructure/config/tsoa-ioc",
+    "middleware": "fastify",
+    "authenticationModule": "src/shared/auth/fastify-authentication",
     "esm": true
   },
   "compilerOptions": {

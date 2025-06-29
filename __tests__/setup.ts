@@ -18,7 +18,7 @@ const mockPrismaClient = {
   $connect: jest.fn().mockResolvedValue(undefined),
   $disconnect: jest.fn().mockResolvedValue(undefined),
   user: {
-    findUnique: jest.fn().mockImplementation((args: { where: { id?: string, email?: string } }) => {
+    findUnique: jest.fn().mockImplementation((args: { where: { id?: string; email?: string } }) => {
       // Return a specific user if id is provided
       if (args?.where?.id) {
         return Promise.resolve({
@@ -54,7 +54,7 @@ jest.mock('@prisma/client', () => {
 });
 
 // Mock the PrismaService methods that extend PrismaClient
-jest.mock('../src/infrastructure/database/prisma.service.js', () => {
+jest.mock('../src/infrastructure/prisma/prisma.service.js', () => {
   // Use this approach to avoid the TypeScript errors
   const mockPrismaServiceInstance = {
     $connect: mockPrismaClient.$connect,
@@ -67,11 +67,11 @@ jest.mock('../src/infrastructure/database/prisma.service.js', () => {
       await mockPrismaClient.$disconnect();
     })
   };
-  
+
   return {
     PrismaService: jest.fn().mockImplementation(() => mockPrismaServiceInstance)
   };
 });
 
-// Increase the Jest timeout
-jest.setTimeout(30000);
+// Increase the global Jest timeout for all tests
+jest.setTimeout(120000); // 2 minutes to accommodate slower integration tests

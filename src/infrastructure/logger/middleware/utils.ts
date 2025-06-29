@@ -23,18 +23,21 @@ export function formatLogObject(data: Record<string, any>): string {
  * @param sensitiveKeys - Array of keys to sanitize
  * @returns Sanitized object
  */
-export function sanitizeData(obj: Record<string, any>, sensitiveKeys: string[] = ['password', 'token', 'authorization', 'secret']): Record<string, any> {
+export function sanitizeData(
+  obj: Record<string, any>,
+  sensitiveKeys: string[] = ['password', 'token', 'authorization', 'secret']
+): Record<string, any> {
   const result = { ...obj };
-  
+
   for (const key in result) {
     if (Object.prototype.hasOwnProperty.call(result, key)) {
-      if (sensitiveKeys.some(k => key.toLowerCase().includes(k.toLowerCase()))) {
+      if (sensitiveKeys.some((k) => key.toLowerCase().includes(k.toLowerCase()))) {
         result[key] = '[REDACTED]';
       } else if (typeof result[key] === 'object' && result[key] !== null) {
         result[key] = sanitizeData(result[key], sensitiveKeys);
       }
     }
   }
-  
+
   return result;
 }

@@ -14,10 +14,7 @@ if (!existsSync(logDir)) {
 /**
  * Common format for file transports
  */
-const fileFormat = combine(
-  timestamp(),
-  json()
-);
+const fileFormat = combine(timestamp(), json());
 
 /**
  * Creates a daily rotate file transport for specific log level

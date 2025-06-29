@@ -6,7 +6,7 @@ class MockPrismaService {
   // Create simple Jest mocks for the methods we need to test
   $connect = jest.fn();
   $disconnect = jest.fn();
-  
+
   // The lifecycle methods that call our mocks
   async onModuleInit() {
     await this.$connect();
@@ -19,12 +19,11 @@ class MockPrismaService {
 
 describe('PrismaService', () => {
   let prismaService: MockPrismaService;
-  
+
   beforeEach(() => {
     jest.clearAllMocks();
     prismaService = new MockPrismaService();
   });
-
 
   it('should be defined', () => {
     expect(prismaService).toBeDefined();
@@ -34,7 +33,7 @@ describe('PrismaService', () => {
     it('should connect to the database', async () => {
       // Act
       await prismaService.onModuleInit();
-      
+
       // Assert
       expect(prismaService.$connect).toHaveBeenCalledTimes(1);
     });
@@ -44,7 +43,7 @@ describe('PrismaService', () => {
     it('should disconnect from the database', async () => {
       // Act
       await prismaService.onModuleDestroy();
-      
+
       // Assert
       expect(prismaService.$disconnect).toHaveBeenCalledTimes(1);
     });

@@ -6,9 +6,7 @@ import { TYPES } from '../../../shared/types/types.js';
 
 @injectable()
 export class CreateUserUseCase {
-  constructor(
-    @inject(TYPES.UserRepository) private userRepository: UserRepository
-  ) {}
+  constructor(@inject(TYPES.UserRepository) private userRepository: UserRepository) {}
 
   async execute(dto: CreateUserDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findByEmail(dto.email);
@@ -16,11 +14,7 @@ export class CreateUserUseCase {
       throw new Error(`User with email ${dto.email} already exists`);
     }
 
-    const user = new User(
-      crypto.randomUUID(),
-      dto.email,
-      dto.name
-    );
+    const user = new User(crypto.randomUUID(), dto.email, dto.name);
 
     const createdUser = await this.userRepository.create(user);
     return createdUser.toJSON() as UserResponseDto;

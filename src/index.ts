@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { TYPES } from './shared/types/types.js';
 import { container } from './infrastructure/config/inversify.config.js';
 import { Server } from './infrastructure/server/server.js';
-import { PrismaService } from './infrastructure/database/prisma.service.js';
+import { PrismaService } from './infrastructure/prisma/prisma.service.js';
 import * as dotenv from 'dotenv';
 dotenv.config();
 

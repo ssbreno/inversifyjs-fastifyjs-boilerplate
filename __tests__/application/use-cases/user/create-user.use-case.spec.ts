@@ -12,20 +12,14 @@ jest.mock('uuid', () => ({
 describe('CreateUserUseCase', () => {
   let createUserUseCase: CreateUserUseCase;
   let mockUserRepository: jest.Mocked<UserRepository>;
-  
+
   const mockCreateUserDto: CreateUserDto = {
     email: 'test@example.com',
     name: 'Test User'
   };
-  
-  const mockUser = new User(
-    'mocked-uuid',
-    'test@example.com',
-    'Test User',
-    new Date(),
-    new Date()
-  );
-  
+
+  const mockUser = new User('mocked-uuid', 'test@example.com', 'Test User', new Date(), new Date());
+
   beforeEach(() => {
     // Create mock repository
     mockUserRepository = {
@@ -36,31 +30,31 @@ describe('CreateUserUseCase', () => {
       update: jest.fn(),
       delete: jest.fn()
     };
-    
+
     createUserUseCase = new CreateUserUseCase(mockUserRepository);
   });
-  
+
   it('should throw an error if user with email already exists', async () => {
     // Arrange
     mockUserRepository.findByEmail.mockResolvedValueOnce(mockUser);
-    
+
     // Act & Assert
-    await expect(createUserUseCase.execute(mockCreateUserDto))
-      .rejects
-      .toThrow(`User with email ${mockCreateUserDto.email} already exists`);
-    
+    await expect(createUserUseCase.execute(mockCreateUserDto)).rejects.toThrow(
+      `User with email ${mockCreateUserDto.email} already exists`
+    );
+
     expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockCreateUserDto.email);
     expect(mockUserRepository.create).not.toHaveBeenCalled();
   });
-  
+
   it('should create a new user successfully', async () => {
     // Arrange
     mockUserRepository.findByEmail.mockResolvedValueOnce(null);
     mockUserRepository.create.mockResolvedValueOnce(mockUser);
-    
+
     // Act
     const result = await createUserUseCase.execute(mockCreateUserDto);
-    
+
     // Assert
     expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(mockCreateUserDto.email);
     expect(mockUserRepository.create).toHaveBeenCalledWith(expect.any(User));
