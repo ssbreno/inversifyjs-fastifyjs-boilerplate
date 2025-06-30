@@ -1,4 +1,4 @@
-FROM node:22-alpine AS builder
+FROM node:18-alpine AS builder
 
 # Install OpenSSL for Prisma and yarn
 RUN apk add --no-cache openssl libc6-compat yarn
@@ -21,7 +21,7 @@ RUN yarn swagger:generate
 
 RUN yarn build
 
-FROM node:22-alpine AS production
+FROM node:18-alpine AS production
 
 # Install OpenSSL for Prisma and yarn
 RUN apk add --no-cache openssl libc6-compat yarn
